@@ -1,0 +1,89 @@
+{
+  "name": "e87-studio",
+  "version": "1.0.0-beta.1",
+  "private": true,
+  "description": "Offline Bluetooth studio for E87 circular badges",
+  "author": "E87 Studio contributors",
+  "license": "MIT",
+  "main": "desktop/main.cjs",
+  "workspaces": [
+    "web"
+  ],
+  "scripts": {
+    "start": "npm run build && electron .",
+    "build": "node desktop/build-native.cjs && npm run build --workspace web -- --mode desktop",
+    "check": "npm run check --workspace web && node --test desktop/*.test.cjs && node --experimental-strip-types --test desktop/*.test.mjs",
+    "dist:mac": "npm run build && electron-builder --mac --publish never",
+    "dist:win": "npm run build && electron-builder --win --x64 --publish never",
+    "dist:linux": "npm run build && electron-builder --linux --x64 --publish never",
+    "build:web": "npm run build --workspace web"
+  },
+  "devDependencies": {
+    "electron": "44.8.0",
+    "electron-builder": "26.15.3"
+  },
+  "build": {
+    "appId": "local.e87.studio",
+    "productName": "E87 Studio",
+    "copyright": "E87 Studio · Based on work by Felix Herbst (MIT)",
+    "directories": {
+      "output": "release",
+      "buildResources": "desktop/assets"
+    },
+    "files": [
+      "desktop/*.cjs",
+      "desktop/assets/icon.png",
+      "!desktop/*.test.cjs",
+      "web/dist-desktop/**/*",
+      "LICENSE",
+      "README.md",
+      "package.json",
+      "!desktop/build-native.cjs",
+      "docs/**/*",
+      "README.ru.md"
+    ],
+    "asar": true,
+    "artifactName": "E87-Studio-${version}-${os}-${arch}.${ext}",
+    "mac": {
+      "category": "public.app-category.graphics-design",
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "identity": "-",
+      "hardenedRuntime": false,
+      "extendInfo": {
+        "NSBluetoothAlwaysUsageDescription": "E87 Studio подключается к выбранному вами значку и передаёт изображения и анимации по Bluetooth.",
+        "NSBluetoothPeripheralUsageDescription": "Bluetooth нужен для подключения к вашему значку E87."
+      },
+      "extraResources": [
+        {
+          "from": "desktop/bin/mac-badge-discovery",
+          "to": "mac-badge-discovery"
+        }
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "E87-Studio-${version}-windows-${arch}-setup.${ext}"
+    },
+    "portable": {
+      "artifactName": "E87-Studio-${version}-windows-${arch}-portable.${ext}"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Graphics",
+      "maintainer": "E87 Studio contributors"
+    }
+  }
+}
