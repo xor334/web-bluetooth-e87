@@ -17,15 +17,12 @@
   let libraryOpen = $state(false)
   let profiles = $state(readProfiles())
   let scan = $state<BadgeScan | null>(null)
-  let pairing = $state<BadgePairing | null>(null)
   let selected = $state('')
   let active = $state<Profile | null>(null)
   let name = $state('')
   let macInput = $state('')
   let error = $state('')
-  let pin = $state('')
   let scanDialog: HTMLDialogElement
-  let pairDialog: HTMLDialogElement
   const key = (id: string) => id.toUpperCase()
   function profileFor(device: BadgeDevice): Profile {
     const saved = profiles[key(device.deviceId)]
@@ -53,7 +50,6 @@
     } else { error = 'Значок исчез из списка. Выберите его снова.' }
   }
   function cancel() { if (scan) void window.e87Desktop?.select(scan.requestId, '') }
-  function pair(confirmed: boolean) { if (pairing) void window.e87Desktop?.pair(pairing.requestId, { confirmed, pin: pin.trim() || undefined }) }
   function forget(id: string) {
     const next = { ...profiles }; delete next[key(id)]; profiles = next
     localStorage.setItem(KEY, JSON.stringify(profiles))
@@ -67,11 +63,9 @@
       scan = value
       if (selected && !macInput) macInput = value?.devices.find(d => d.deviceId === selected)?.advertisedMac || ''
     })
-    const stopPair = api.onPairing(value => { pairing = value; pin = '' })
-    return () => { stopScan(); stopPair() }
+    return stopScan
   })
   $effect(() => { if (scan) scanDialog?.showModal(); else scanDialog?.close() })
-  $effect(() => { if (pairing) pairDialog?.showModal(); else pairDialog?.close() })
 </script>
 
 <div class="badge-library"><button class="quiet-button" onclick={() => libraryOpen = !libraryOpen} aria-expanded={libraryOpen}>Значки</button>
@@ -121,13 +115,4 @@
   <p class="address-note">{window.e87Desktop?.platform === 'darwin' ? 'MAC считывается из объявления значка, если прошивка его передаёт. ID — служебный.' : 'Если система не раскрыла MAC, указан её идентификатор.'} MAC с экрана или QR-кода можно сохранить вручную.</p>
   {#if error}<p class="form-error" role="alert">{error}</p>{/if}
   <div class="dialog-actions"><button onclick={cancel}>Отмена</button><button class="primary" onclick={connectSelected} disabled={!selected || !scan?.devices.some(d => d.deviceId === selected)}>Подключить значок →</button></div>
-</dialog>
-
-<dialog bind:this={pairDialog} class="device-dialog pairing-dialog" oncancel={(event) => { event.preventDefault(); pair(false) }}>
-  <span class="eyebrow">Bluetooth</span><h2>Подтвердите сопряжение</h2>
-  <code class="device-id">{pairing?.deviceId}</code>
-  {#if pairing?.pairingKind === 'confirmPin'}<p>Код совпадает с кодом на значке?</p><div class="pair-pin">{pairing.pin}</div>
-  {:else if pairing?.pairingKind === 'providePin'}<label>PIN значка<input bind:value={pin} maxlength="16" autocomplete="off" /></label>
-  {:else}<p>Разрешить сопряжение с выбранным значком?</p>{/if}
-  <div class="dialog-actions"><button onclick={() => pair(false)}>Отмена</button><button class="primary" disabled={pairing?.pairingKind === 'providePin' && !pin.trim()} onclick={() => pair(true)}>Подтвердить</button></div>
 </dialog>

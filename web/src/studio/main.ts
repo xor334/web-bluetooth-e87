@@ -1,9 +1,8 @@
 import { mount } from 'svelte'
 import './app.css'
 import App from './App.svelte'
+import { initializeNative } from './native'
 
-const app = mount(App, {
-  target: document.getElementById('app')!,
+initializeNative().then(() => mount(App, { target: document.getElementById('app')! })).catch(error => {
+  document.getElementById('app')!.textContent = `Не удалось запустить приложение: ${String(error)}`
 })
-
-export default app

@@ -218,7 +218,8 @@
       if (isWriting) { event.preventDefault(); event.returnValue = '' }
     }
     window.addEventListener('beforeunload', beforeUnload)
-    return () => window.removeEventListener('beforeunload', beforeUnload)
+    const stop = window.e87Desktop?.onCloseBlocked(() => { status = 'Идёт передача. Дождитесь завершения или нажмите «Остановить».' })
+    return () => { window.removeEventListener('beforeunload', beforeUnload); void stop?.then(fn => fn()) }
   })
 
   // ─── Logging ───
@@ -1299,6 +1300,10 @@
       const payload = await getUploadBytes()
       const deviceMode = resolveUploadModeForDevice()
       const ext = deviceMode === 'image' ? 'jpg' : 'avi'
+      if (window.e87Desktop) {
+        if (await window.e87Desktop.savePayload(payload, ext)) log(`Saved ${ext.toUpperCase()} (${formatBytes(payload.length)})`)
+        return
+      }
       const mime = deviceMode === 'image' ? 'image/jpeg' : 'video/x-msvideo'
       const blob = makeBlob(payload, mime)
       const url = URL.createObjectURL(blob)
@@ -1342,6 +1347,7 @@
       return
     }
 
+    await window.e87Desktop?.setTransferActive(true)
     isWriting = true
     cancelRequested = false
     progress = 0
@@ -1390,6 +1396,7 @@
       log(status)
     } finally {
       isWriting = false
+      await window.e87Desktop?.setTransferActive(false)
     }
   }
 

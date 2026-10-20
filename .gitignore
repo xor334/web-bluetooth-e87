@@ -26,3 +26,5 @@ release-linux/
 desktop/bin/
 
 web/dist-desktop/
+src-tauri/target/
+src-tauri/gen/

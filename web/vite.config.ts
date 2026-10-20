@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url'
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => ({
-  plugins: [svelte(), basicSsl()],
+  plugins: mode === 'desktop' ? [svelte()] : [svelte(), basicSsl()],
   base: mode === 'desktop' ? './' : process.env.BASE_PATH,
   build: mode === 'desktop' ? {
     outDir: 'dist-desktop',
