@@ -320,6 +320,8 @@ pub async fn ble_connect(
             tokio::select! {
                 notification = notifications.next() => {
                     let Some(n) = notification else { break };
+                    let state = app.state::<Bluetooth>();
+                    if !state.0.lock().await.connection.as_ref().is_some_and(|c| Arc::ptr_eq(c, &conn)) { return; }
                     if !conn.characteristics.iter().any(|c| c.uuid == n.uuid) { continue; }
                     let _ = app.emit_to("main", "ble-notification", Notification { session_id, uuid: n.uuid.to_string(), value: n.value });
                 }
