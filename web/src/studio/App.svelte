@@ -36,6 +36,7 @@
     type E87FileBrowseEntry,
   } from '../lib/e87-protocol'
   import { buildMjpgAvi } from '../avi-builder'
+  import { canvasToBadgeJpeg } from '../lib/image-encoding'
   import type { PatternDef } from '../pattern-generators'
   import QRCode from 'qrcode'
 
@@ -268,8 +269,7 @@
       ctx.fillStyle = 'black'
       ctx.fillRect(0, 0, output.width, output.height)
       ctx.drawImage(bitmap, 0, 0, output.width, output.height)
-      const resized = await canvas.convertToBlob({ type: 'image/jpeg', quality: 0.9 })
-      return new Uint8Array(await resized.arrayBuffer())
+      return canvasToBadgeJpeg(canvas, 0.9)
     } finally {
       bitmap.close()
     }
@@ -1142,8 +1142,7 @@
 
     ctx.restore()
 
-    const blob = await canvas.convertToBlob({ type: 'image/jpeg', quality: 0.92 })
-    return new Uint8Array(await blob.arrayBuffer())
+    return canvasToBadgeJpeg(canvas, 0.92)
   }
 
   async function generateQr(): Promise<void> {
@@ -1199,14 +1198,14 @@
         label = `Video ${videoTrimStart.toFixed(1)}s–${videoTrimEnd.toFixed(1)}s @ ${videoFps}fps`
       } else if (uploadMode === 'text') {
         const frames = await normalizePatternFramesForOutput(await generateTextFrames({ ...textSettings }))
-        avi = buildMjpgAvi(frames, { fps: 15 })
+        avi = buildMjpgAvi(frames, { fps: 15, ...getOutputFrameSize() })
         label = `Бегущая строка · ${(frames.length / 15).toFixed(1)} с`
       } else if (uploadMode === 'pattern') {
         if (!selectedPattern) throw new Error('No pattern selected')
         isGeneratingPattern = true
         const patternFramesRaw = await selectedPattern.generate({ frames: patternFrameCount, fps: patternFps })
         const patternFrames = await normalizePatternFramesForOutput(patternFramesRaw)
-        avi = buildMjpgAvi(patternFrames, { fps: patternFps })
+        avi = buildMjpgAvi(patternFrames, { fps: patternFps, ...getOutputFrameSize() })
         label = `${selectedPattern.name} · ${(patternFrameCount / patternFps).toFixed(1)} с`
         isGeneratingPattern = false
       } else {
@@ -1274,13 +1273,13 @@
     }
     if (uploadMode === 'text') {
       const frames = await normalizePatternFramesForOutput(await generateTextFrames({ ...textSettings }))
-      return buildMjpgAvi(frames, { fps: 15 })
+      return buildMjpgAvi(frames, { fps: 15, ...getOutputFrameSize() })
     }
     if (uploadMode === 'pattern') {
       if (!selectedPattern) throw new Error('No pattern selected.')
       const patternFramesRaw = await selectedPattern.generate({ frames: patternFrameCount, fps: patternFps })
       const patternFrames = await normalizePatternFramesForOutput(patternFramesRaw)
-      return buildMjpgAvi(patternFrames, { fps: patternFps })
+      return buildMjpgAvi(patternFrames, { fps: patternFps, ...getOutputFrameSize() })
     }
     if (uploadMode === 'qr') {
       return generateQrJpegBytes()

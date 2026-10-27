@@ -3,6 +3,7 @@ type BadgeScan = { requestId: number; devices: BadgeDevice[] }
 interface Window {
   e87Desktop?: {
     platform: string
+    encodeJpeg: (rgba: Uint8ClampedArray, width: number, height: number, quality: number) => Promise<Uint8Array>
     onDevices: (handler: (scan: BadgeScan | null) => void) => () => void
     select: (requestId: number, deviceId: string) => Promise<boolean>
     savePayload: (bytes: Uint8Array, extension: string) => Promise<boolean>

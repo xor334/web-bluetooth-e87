@@ -23,6 +23,10 @@ export async function initializeNative() {
   const platform = await invoke<string>('platform')
   window.e87Desktop = {
     platform,
+    encodeJpeg: async (rgba, width, height, quality) => new Uint8Array(await invoke<ArrayBuffer>(
+      'encode_badge_jpeg', new Uint8Array(rgba.buffer, rgba.byteOffset, rgba.byteLength),
+      { headers: { 'x-e87-width': String(width), 'x-e87-height': String(height), 'x-e87-quality': String(Math.max(1, Math.min(100, Math.round(quality * 100)))) } },
+    )),
     onDevices: handler => bluetooth.onDevices(handler),
     select: (requestId, deviceId) => bluetooth.select(requestId, deviceId),
     savePayload: (bytes, extension) => invoke<boolean>('save_payload', { bytes: Array.from(bytes), extension }),

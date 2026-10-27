@@ -6,17 +6,20 @@ A lightweight **Tauri + Rust** app using native Bluetooth and the system WebView
 
 A compact, offline editor for circular E87 Bluetooth badges. Prepare an image, a scrolling message, a short video or a looping visual, preview it inside the badge's circle, and send it over Bluetooth.
 
-Built on Felix Herbst's [web-bluetooth-e87](https://github.com/hybridherbst/web-bluetooth-e87). The original browser interface, BLE transfer protocol, Jieli authentication and AVI writer are preserved. The desktop interface is a separate entry point and is currently in **Russian**; the documentation is available in English and Russian.
+Built on Felix Herbst's [web-bluetooth-e87](https://github.com/hybridherbst/web-bluetooth-e87). The original browser entry point, BLE transfer protocol, Jieli authentication and AVI writer are preserved; shared photo framing now retains the full source image. The desktop interface is a separate entry point and is currently in **Russian**; the documentation is available in English and Russian.
 
 > Community preview, maintained in the contributor's fork while the upstream PR is under review. These downloads are not an official upstream release.
 
 ## Download
 
-**[E87 Studio 1.0.0-beta.2 — installers and SHA-256 checksums](https://github.com/xor334/web-bluetooth-e87/releases/tag/studio-v1.0.0-beta.2)**
+**[E87 Studio 1.0.0-beta.3 — installers and SHA-256 checksums](https://github.com/xor334/web-bluetooth-e87/releases/tag/studio-v1.0.0-beta.3)**
+
+Includes the [JPEG compatibility and full-photo cropping fixes](docs/releases/1.0.0-beta.3.md).
+If beta.2 produced stripes, regenerate and resend the content from the original files.
 
 | Platform | Packages | Hardware validation |
 | --- | --- | --- |
-| macOS | Separate DMGs for Apple Silicon and Intel | New native BLE transport; hardware validation pending |
+| macOS | Separate DMGs for Apple Silicon and Intel | Initial positive user feedback on Apple Silicon; Intel runtime testing pending |
 | Windows x64 | NSIS setup installer | BLE connection and transfer still need testing on Windows |
 | Linux x64 | DEB for Ubuntu 22.04+ / compatible Debian systems | BLE connection and transfer still need testing on Linux |
 
@@ -24,7 +27,7 @@ Release assets can be downloaded without a GitHub account. The release notes ide
 
 ## What you can make
 
-- **Images:** crop, pan and scale a picture in a circular preview.
+- **Images:** position and scale the full photo inside a circular preview, including portrait and panorama edges.
 - **Scrolling text:** Cyrillic and Latin text, three font styles, size, speed, direction, colors and optional glow.
 - **Studio effects:** Liquid chrome, Pearl, Crimson silk, Aurora, Dichroic, Gold eclipse, After dark and Contour. Generated locally as a still or a loop, alongside the 12 original patterns.
 - **Slideshows and video:** ordered image sequences or short clips, converted locally to Motion JPEG AVI.

@@ -1,6 +1,6 @@
 [package]
 name = "e87-studio"
-version = "1.0.0-beta.2"
+version = "1.0.0-beta.3"
 description = "A small native Bluetooth studio for E87 badges"
 authors = ["E87 Studio contributors"]
 license = "MIT"
@@ -15,6 +15,7 @@ tauri-plugin-dialog = "2"
 tauri-plugin-single-instance = "2"
 btleplug = "0.13.5"
 futures = "0.3"
+jpeg-encoder = "=0.7.1"
 serde = { version = "1", features = ["derive"] }
 tokio = { version = "1", features = ["sync", "time", "rt", "macros"] }
 uuid = "1"

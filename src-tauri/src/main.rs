@@ -1,5 +1,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 mod bluetooth;
+mod jpeg;
 use std::sync::atomic::{AtomicBool, Ordering};
 use tauri::{Emitter, Manager};
 use tauri_plugin_dialog::DialogExt;
@@ -75,6 +76,7 @@ fn main() {
             platform,
             save_payload,
             set_transfer_active,
+            jpeg::encode_badge_jpeg,
             bluetooth::ble_scan,
             bluetooth::ble_select,
             bluetooth::ble_connect,

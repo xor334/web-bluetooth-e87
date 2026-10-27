@@ -1,6 +1,6 @@
 {
   "name": "e87-studio",
-  "version": "1.0.0-beta.2",
+  "version": "1.0.0-beta.3",
   "private": true,
   "description": "Offline Bluetooth studio for E87 circular badges",
   "author": "E87 Studio contributors",

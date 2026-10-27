@@ -6,11 +6,14 @@
 
 ## Скачать
 
-Готовые установщики и SHA-256: **[E87 Studio 1.0.0-beta.2](https://github.com/xor334/web-bluetooth-e87/releases/tag/studio-v1.0.0-beta.2)**. Сборки размещены в fork автора PR; для скачивания не нужен аккаунт GitHub.
+Готовые установщики и SHA-256: **[E87 Studio 1.0.0-beta.3](https://github.com/xor334/web-bluetooth-e87/releases/tag/studio-v1.0.0-beta.3)**. Сборки размещены в fork автора PR; для скачивания не нужен аккаунт GitHub.
+
+Включены [исправления JPEG и обрезки фото](docs/releases/1.0.0-beta.3.md).
+Если beta.2 показывала полосы, заново подготовьте содержимое из исходных файлов и отправьте его на значок.
 
 | Система | Файлы | Проверка |
 | --- | --- | --- |
-| macOS | Отдельные DMG для Apple Silicon и Intel | Новый нативный Bluetooth; аппаратная проверка впереди |
+| macOS | Отдельные DMG для Apple Silicon и Intel | Первый положительный отзыв на Apple Silicon; запуск на Intel ещё нужно проверить |
 | Windows x64 | Установщик NSIS `.exe` | Bluetooth на реальном устройстве ещё не проверен |
 | Linux x64 | DEB для Ubuntu 22.04+ / совместимых Debian-систем | Bluetooth на реальном устройстве ещё не проверен |
 

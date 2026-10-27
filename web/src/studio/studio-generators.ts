@@ -1,4 +1,5 @@
 import { scrollLayout } from './text-layout'
+import { canvasToBadgeJpeg } from '../lib/image-encoding'
 import type { PatternDef, PatternOptions } from '../pattern-generators'
 
 const TAU = Math.PI * 2
@@ -78,7 +79,7 @@ async function material(kind: string, opts: PatternOptions): Promise<Uint8Array[
     }
     sc.putImageData(pixels, 0, 0)
     ctx.drawImage(small, 0, 0, SIZE, SIZE)
-    frames.push(new Uint8Array(await (await canvas.convertToBlob({ type: 'image/jpeg', quality: .82 })).arrayBuffer()))
+    frames.push(await canvasToBadgeJpeg(canvas, .82))
   }
   return frames
 }
@@ -118,7 +119,7 @@ async function jewelry(kind: string, opts: PatternOptions): Promise<Uint8Array[]
       }
     }
     ctx.restore()
-    frames.push(new Uint8Array(await (await canvas.convertToBlob({ type: 'image/jpeg', quality: .86 })).arrayBuffer()))
+    frames.push(await canvasToBadgeJpeg(canvas, .86))
   }
   return frames
 }
@@ -152,7 +153,7 @@ export async function generateTextFrames(settings: TextSettings, fps = 15): Prom
     const offset = f / count * distance
     const x = settings.direction === 'left' ? SIZE - offset : -width + offset
     ctx.fillText(text, x, SIZE / 2 + settings.size * .03)
-    frames.push(new Uint8Array(await (await canvas.convertToBlob({ type: 'image/jpeg', quality: .82 })).arrayBuffer()))
+    frames.push(await canvasToBadgeJpeg(canvas, .82))
   }
   return frames
 }
